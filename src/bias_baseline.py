@@ -10,12 +10,17 @@ ratings = pd.read_csv(
     names=columns
 )
 
-train, test = train_test_split(
+train, temp = train_test_split(
     ratings,
     test_size=0.2,
     random_state=42
 )
 
+validation, test = train_test_split(
+    temp,
+    test_size=0.5,
+    random_state=42
+)
 global_mean = train["rating"].mean()
 
 print("Global mean:", global_mean)
