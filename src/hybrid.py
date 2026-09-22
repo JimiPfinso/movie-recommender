@@ -1,6 +1,8 @@
+import pandas as pd
+
 from collaborative import predict_rating
-from content_based import predict_content_rating
-from collaborative import validation, test
+from content_based import predict_content_rating, movies
+from collaborative import validation, train, test
 from sklearn.metrics import root_mean_squared_error
 
 validation = validation.copy()
@@ -99,3 +101,61 @@ test_rmse = root_mean_squared_error(
 )
 
 print(f"Final hybrid test RMSE: {test_rmse:.4f}")
+
+def recommend_movies(user_id, n=10, k=300, alpha=0.9):
+    user_ratings = train[
+        train["user_id"] == user_id
+    ]
+
+    rated_movie_ids = set(
+        user_ratings["movie_id"]
+    )
+
+    unseen_movies = movies[
+        ~movies["movie_id"].isin(rated_movie_ids)
+    ]
+
+    recommendations = []
+
+    for _, movie in unseen_movies.iterrows():
+        movie_id = movie["movie_id"]
+
+        collaborative_score = predict_rating(
+            user_id=user_id,
+            movie_id=movie_id,
+            k=k
+        )
+
+        content_score = predict_content_rating(
+            user_id=user_id,
+            movie_id=movie_id
+        )
+
+        hybrid_score = (
+            alpha * collaborative_score
+            + (1 - alpha) * content_score
+        )
+
+        recommendations.append({
+            "movie_id": movie_id,
+            "title": movie["title"],
+            "predicted_rating": hybrid_score
+        })
+
+    recommendations = pd.DataFrame(recommendations)
+
+    recommendations = recommendations.sort_values(
+        "predicted_rating",
+        ascending=False
+    )
+
+    return recommendations.head(n)
+
+print("\nTop 10 recommendations for User 1:")
+
+top_recommendations = recommend_movies(
+    user_id=1,
+    n=10
+)
+
+print(top_recommendations)
