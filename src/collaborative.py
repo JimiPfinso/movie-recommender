@@ -23,10 +23,6 @@ validation, test = train_test_split(
     random_state=42
 )
 
-print("Training ratings:", len(train))
-print("Validation ratings:", len(validation))
-print("Test ratings:", len(test))
-
 user_movie_matrix = train.pivot_table(
     index="user_id",
     columns="movie_id",
@@ -99,51 +95,56 @@ def predict_rating(user_id, movie_id, k=10):
     return prediction
 
 
-validation = validation.copy()
+if __name__ == "__main__":
+    print("Training ratings:", len(train))
+    print("Validation ratings:", len(validation))
+    print("Test ratings:", len(test))
+    
+    validation = validation.copy()
 
-k_values = [50, 75, 100, 150, 200, 300, 400, 500]
+    k_values = [50, 75, 100, 150, 200, 300, 400, 500]
 
-best_k = None
-best_rmse = float("inf")
+    best_k = None
+    best_rmse = float("inf")
 
-for k in k_values:
-    validation["prediction"] = validation.apply(
+    for k in k_values:
+        validation["prediction"] = validation.apply(
+            lambda row: predict_rating(
+                row["user_id"],
+                row["movie_id"],
+                k=k
+            ),
+            axis=1
+        )
+
+        rmse = root_mean_squared_error(
+            validation["rating"],
+            validation["prediction"]
+        )
+
+        print(f"k={k}: Validation RMSE={rmse:.4f}")
+
+        if rmse < best_rmse:
+            best_rmse = rmse
+            best_k = k
+
+    print(f"\nBest k: {best_k}")
+    print(f"Best validation RMSE: {best_rmse:.4f}")
+
+    test = test.copy()
+
+    test["prediction"] = test.apply(
         lambda row: predict_rating(
             row["user_id"],
             row["movie_id"],
-            k=k
+            k=best_k
         ),
         axis=1
     )
 
-    rmse = root_mean_squared_error(
-        validation["rating"],
-        validation["prediction"]
+    test_rmse = root_mean_squared_error(
+        test["rating"],
+        test["prediction"]
     )
 
-    print(f"k={k}: Validation RMSE={rmse:.4f}")
-
-    if rmse < best_rmse:
-        best_rmse = rmse
-        best_k = k
-
-print(f"\nBest k: {best_k}")
-print(f"Best validation RMSE: {best_rmse:.4f}")
-
-test = test.copy()
-
-test["prediction"] = test.apply(
-    lambda row: predict_rating(
-        row["user_id"],
-        row["movie_id"],
-        k=best_k
-    ),
-    axis=1
-)
-
-test_rmse = root_mean_squared_error(
-    test["rating"],
-    test["prediction"]
-)
-
-print(f"\nFinal test RMSE with k={best_k}: {test_rmse:.4f}")
+    print(f"\nFinal test RMSE with k={best_k}: {test_rmse:.4f}")
