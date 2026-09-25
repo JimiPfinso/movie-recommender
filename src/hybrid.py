@@ -1,9 +1,8 @@
 import pandas as pd
 
-from collaborative import predict_rating, validation, train, test
-from content_based import predict_content_rating, movies
+from src.collaborative import predict_rating, validation, train, test
+from src.content_based import predict_content_rating, movies
 from sklearn.metrics import root_mean_squared_error
-
 
 def predict_hybrid_rating(
     user_id,
