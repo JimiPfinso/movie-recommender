@@ -5,14 +5,15 @@
 html {
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  background: #f7f7f8;
-  color: #18181b;
+  background: #17171b;
+  color: #f7f3ee;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: #17171b;
 }
 
 button,

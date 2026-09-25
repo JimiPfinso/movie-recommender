@@ -9,41 +9,94 @@ main {
 }
 
 h1 {
+  color: #f7f3ee;
   font-size: 48px;
   margin-bottom: 8px;
 }
 
 .subtitle {
-  color: #666;
+  color: #b8b3ad;
   margin-bottom: 32px;
 }
 
 .search {
   display: flex;
+  align-items: center;
   gap: 12px;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
+}
+
+.search label {
+  color: #f7f3ee;
+  font-weight: 600;
 }
 
 .search input {
-  width: 180px;
+  width: 120px;
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #3a393f;
   border-radius: 8px;
+  background: #222228;
+  color: #f7f3ee;
   font-size: 16px;
+  outline: none;
+}
+
+.search input:focus {
+  border-color: #ff5a67;
+  box-shadow: 0 0 0 3px rgba(255, 90, 103, 0.15);
 }
 
 .search button {
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
-  background: #111;
-  color: white;
+  background: #ff5a67;
+  color: #ffffff;
   font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
 .search button:hover {
-  background: #333;
+  background: #e94d5a;
+  transform: translateY(-1px);
+}
+
+.search button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.info-box {
+  background: #222228;
+  border: 1px solid #3a393f;
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 36px;
+}
+
+.info-box > strong {
+  display: block;
+  color: #e6b84a;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.info-box p {
+  margin: 8px 0;
+  color: #b8b3ad;
+  line-height: 1.5;
+}
+
+.info-box p strong {
+  color: #f7f3ee;
+}
+
+section h2 {
+  color: #f7f3ee;
+  margin-bottom: 20px;
 }
 
 .recommendations {
@@ -53,47 +106,63 @@ h1 {
 }
 
 .movie-card {
-  border: 1px solid #ddd;
+  background: #292930;
+  border: 1px solid #3a393f;
   border-radius: 12px;
   padding: 20px;
   text-align: left;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-3px);
+  border-color: #ff5a67;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 .movie-card h3 {
+  color: #f7f3ee;
   margin: 0 0 14px;
 }
 
 .movie-card p {
   margin: 6px 0;
-  color: #555;
+  color: #b8b3ad;
+}
+
+/* Make the predicted rating stand out */
+.movie-card p:first-of-type {
+  color: #e6b84a;
+  font-weight: 600;
 }
 
 .error {
-  color: #c62828;
+  color: #ff7b85;
+  margin-bottom: 20px;
 }
 
 @media (max-width: 700px) {
+  main {
+    padding: 40px 20px;
+  }
+
+  h1 {
+    font-size: 38px;
+  }
+
   .recommendations {
     grid-template-columns: 1fr;
   }
 
   .search {
     flex-direction: column;
+    align-items: stretch;
   }
-}
 
-.search {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 40px;
-}
-
-section h2 {
-  margin-bottom: 20px;
-}
-
-.search button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  .search input {
+    width: 100%;
+  }
 }
