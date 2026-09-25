@@ -8,6 +8,9 @@ type Recommendation = {
   rating_count: number;
 };
 
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 function App() {
   const [userId, setUserId] = useState("1");
   const [count, setCount] = useState("10");
@@ -21,7 +24,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/recommendations/${userId}?n=${count}`
+        `${API_URL}/recommendations/${userId}?n=${count}`
       );
 
       const data = await response.json();
